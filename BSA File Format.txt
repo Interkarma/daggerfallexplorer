@@ -1,0 +1,1516 @@
+The UESP: dagger/dfbsa.txt										
+			Daggerfall's BSA File Formats
+	              by Dave Humphrey - uesp@m0use.net
+ 		                 6 April 2002
+
+This is a description of the format of the various .BSA files found in the
+ARENA2 directory of Elder Scrolls:Daggerfall by Bethesda.  The information
+here is not complete or 100% percent accurate, although the basic formats
+appears to be well understood.  For more information, corrections, or 
+comments, e-mail me at the above address.  Check out 
+
+		http://www.m0use.net/~uesp/dagger/ 
+
+for the latest version of this document and other DF goodies.
+
+
+  CONTENTS
+================================
+  General BSA Files
+	General File Layout
+	BSA Header
+	BSA Records
+	BSA Directory
+	BSA 0x0100 Directory
+	BSA 0x0200 Directory
+  MAPS.BSA
+	General File Layout
+	Location Offset Section (MapPItem)
+	Location Record Data (MapPItem)
+		Location Records
+		Dungeon Records
+        Location PreRecords Sub-Format
+        Location PostRecords Sub-Format
+	Dungeon Offset Section (MapDItem)
+	Dungeon Record Data (MapDItem)
+	Location Table Section (MapTable)
+	Location Name Section (MapNames)
+	Map Directory
+  ARCH3D.BSA
+	General File Layout
+	BSA Header
+	3D Object Records
+	3D Object Header
+	Plane Data Record Section
+  BLOCKS.BSA
+	RMB General File Layout
+        	RMB Fixed Length Data (FLD)
+			RMB FLD Record Counts
+			RMB FLD Header
+			RMB FLD Section1
+			RMB FLD Section2
+			RMB Section1 Sizes
+			RMB FLD Section3
+			RMB FLD Section4
+			RMB FLD Filenames
+		RMB SubRecords
+			RMB SubRecords1
+			    	RMB SubRecord1 Header
+			    	RMB SubRecord1 Section1
+			    	RMB SubRecord1 Section2
+			    	RMB SubRecord1 Section3
+			    	RMB SubRecord1 Section4
+			    	RMB SubRecord1 Section5
+			RMB SubRecords2
+			RMB SubRecords3
+  Appendix A - REGION NUMBERS
+  Appendix B - LOCATION TYPES
+  Appendix C - BLOCK INDICES
+  Appendix D - COORDINATE LIMITS
+  Appendix E - UV TEXTURE COORDINATES
+
+
+  GENERAL BSA FILES
+================================
+  There are five BSA files in Daggerfall's ARENA2 directory (ARCH3D, MAPS,
+  MONSTER, MIDI, and BLOCKS). Although they contain different data, their
+  overall structure is the same. This format has been derived from all these
+  five files.  The following description appears to be complete.
+
+
+    General File Layout
+  -------------------------------------  
+	BSA Header    	
+	...BSA Records...
+	BSA Directory
+
+
+    BSA Header
+  -------------------------------------  
+    This is the first 4 bytes found at the start of a BSA file and gives
+    information about the BSA directory at the end of the file.
+
+	[Bytes 0-1] short DirectoryCount;
+		Gives the number of entries in the directory at the end of the 
+		file.
+	[Bytes 2-3] short DirectoryType; 
+		Gives the type of directory at the end of the BSA file (See
+		BSA Directory below).
+			0x0100 = Directory has records of 18 bytes in size
+				 consisting of a 14 byte filename and a long
+				 record length.
+			0x0200 = Directory has records of 8 bytes in size
+				 consisting of long ID and a long record size.
+
+    BSA Records
+  -------------------------------------  
+    This data will depend on the actual BSA file.  The basic contents for the
+    five known BSA files are as follows:
+	ARCH3D  = 3D Object Information
+	BLOCKS  = Dungeon/town block information
+	MAPS    = Location information (towns, dungeon, houses, temples, etc...)
+	MONSTER = Monster data (no images)
+	MIDI    = HMI formatted music
+
+
+    BSA Directory
+  -------------------------------------
+     The directory contains the information needed to access the various data
+     records in the BSA file.  The contents of each record depends on the BSA
+     file.  In general, the directory gives an identification number/string and
+     a record length for each record.  There are two known types of directories
+     identified by the DirectoryType bytes in the BSA header (0x0100 and 0x0200).
+
+
+    BSA 0x0100 Directory (Name)
+  -------------------------------------
+    The 0x0100 type directory consists of records 18 bytes in size and give a
+    record size and 13 byte name for each BSA record.
+	
+	[Bytes 0-13] char FileName[14];
+		The filename which identifies this data section.  Filenames
+		are in the usual DOS 8.3 format.
+	[Bytes 14-17] long DataSize;
+		The size of the data in bytes.  The first record starts at 
+		offset 4 in the file, ignoring the 4 bytes of the BSA Header.
+		The subsequent section offsets can be calculated from this.
+
+
+    BSA 0x0200 Directory (Number)
+  -------------------------------------
+    The 0x0200 type directory consists of records 8 bytes in size and give a
+    record size and long identifier for each BSA record.
+	
+	[Bytes 0-3] long RecordID;
+		A long number which assumbly identifies the record somehow.
+	[Bytes 4-7] long DataSize;
+		The size of the data in bytes.  The first entry starts at 
+		offset 4 in the file, ignoring the 4 bytes of the BSA Header.
+		The subsequent section offsets can be calculated from this.
+
+
+  MAPS.BSA
+================================
+  Overall, the Maps.BSA file contains 61 total regions with a combined total
+  of 15251 locations, with 4232 of these being dungeon types.
+
+
+     General File Layout
+   -------------------------------------
+     The file starts with a short BSA header followed by the map data as sorted
+     by map region (the provinces such as Wayrest, Glenpoint, Daggerfall etc...
+     in the game).  Each region is furthur divided into other data sections.  
+     Each data section is referenced by a directory entry which occurs at the 
+     end of the file as per a usual BSA file.
+
+	BSA Header
+        Begin Region
+	  Location Offset Section 	} MapPItem
+	  Location Record Data		} MapPItem
+	  Dungeon Offset Section	} MapDItem
+ 	  Dungeon Record Data		} MapDItem
+	  Table Data			} MapTable
+	  Name Data			} MapNames
+	End Region
+	...Other Regions...
+	Map Directory
+
+
+     Location Offset Section (MapPItem)
+   -------------------------------------
+     Offset sections appear before each section of town record data.  It is
+     merely a list of 4 byte long values which point to the start of a location
+     record relative to the end of the offset section.
+
+
+     Location Record Data (MapPItem)
+   -------------------------------------
+     Each record is pointed to by one offset record in the preceding offset
+     section.  Records are variable length. Contains all locations of the
+     region (town, dungeon, house, etc...).
+
+	[Bytes 0-3]	long PreRecordCount
+		Gives the number of 6 byte records which follow.  This value
+		can be 0x00000000 indicating that no records exist.  The
+		record data has no visible effect on the location. Values 
+		here range from 0 to 555 (confirmed) (around 20% of location
+  		and dungeon records have no prerecords).  Total of 569407
+		prerecords in the MAPS.BSA file.
+	[Bytes 4...]	unsigned char PreRecords[6]
+		The 6 byte record data if there is any.
+	[Bytes ...]	Header Information, 0x47 (71) bytes			
+		[Bytes 0-3]   	long  OneValue1 = 0x00000001;
+			Always this value in both location and dungeon records
+			(confirmed).
+		[Bytes 4-5]   	short NullValue1;
+		[Byte  6]     	char  NullValue2;
+			Always 0 (confirmed).		
+		[Bytes 7-10]  	long  XPosition;
+			Position of the location in game position units.
+			Values can range from 51,200 (far West) to around 
+			32,389,120 (far	East) (confirmed).
+		[Bytes 11-14] 	long  NullValue3;
+			Always 0 (confirmed).
+		[Bytes 15-18] 	long  YPosition;
+			Position of the location in game position units.
+			Values can range from around 40,961 (far South) to
+			16,332,801 (far North) (confirmed).
+		[Bytes 19-22] 	long  Unknown1;
+			Location records always have 0x00008000 (32768).
+			In dungeon records this value is always 0 (confirmed).
+		[Bytes 23-26] 	long  Unknown2;
+			Values range from 0 to 18 in location records (is 0 
+			~75% of the time).  In dungeon records this value is
+			always non-zero in the range 65536 to 589824
+			(confirmed).
+		[Bytes 27-30] 	long  Unknown3;
+			Almost always non-zero in all records.  Location record
+			values range from 0 to 1832, dungeon values range from
+			0 to 684 (confirmed).
+		[Byte  31-32] 	short OneValue2 = 0x0001;
+			Always 1 in both dungeon/location records (confirmed).
+		[Bytes 33-34] 	short LocationID;
+			The unique location ID which is used for quests and
+			probably other things.
+		[Bytes 35-38]	long NullValue4;
+			Always 0 in both dungeon/location records (confirmed).
+		[Bytes 39-40]	short Unknown4;
+			Always 0 in location records and always 1 in dungeon
+			records (confirmed).
+		[Bytes 41-44]	long Unknown5;
+			Always 0 in location records and takes a variety of
+			values in dungeon records (always non-zero) (confirmed).
+			These last two might indicate the presence and size
+			(or offset to) dungeon specific data.
+		[Bytes 45-70] 	char NullValue5[26];
+			Always 0 in both dungeon/location records (confirmed).
+	[Bytes ...] char LocationName[32]
+		Gives the location name.  Data is always 32 bytes in size and
+		string should be NULL terminated. Any extra data after the 
+		string is ignored. The name is used when you enter the location
+		but not used when on the travel map (the Name Table is used for
+		that).
+	[Bytes ...] char Unknowns[9];
+		Unknown values
+	[Bytes ...] short PostRecordCount
+		Gives the number of records which follow.  Records appear
+		to be of fixed length 0x1A (26) bytes.  Always 0x0000 in dungeon
+		records.
+
+     From this point on the dungeon/location records differ slightly.
+
+     	Location Records	
+        ----------------	
+	[Bytes ...] char Unknowns1[5];
+		Unknown values.
+	[Bytes ...] char LocationPostRecords[26][]
+		See the Location PostRecords Format section below.  Each record is
+		0x1A (26) bytes in size. 
+	[Bytes ...] char AnotherName[32];
+		Appears to be another name for the location but its purpose is 
+		unknown.  Changing it has no visible effect.
+	[Bytes ...] long Unknown6;
+		This value is the same as the first 4 bytes in the MapTable for
+		the location.  Another location ID perhaps.
+	[Bytes ...] char Unknowns2[4];
+	[Bytes ...] byte BlockWidth;
+	[Bytes ...] byte BlockHeight;
+		Range from 1 to 8 and give the size of the location in blocks. The
+		BlockWidth*BlockHeight will give the number of block file numbers
+		in the following sections.
+	[Bytes ...] char Unknowns3[7];
+	[Bytes ...] char BlockFileIndex[64];
+		Each can be an index, from 0 to 44, of a block file.  See
+		Appendix C for more information.  Usually just the first index
+		is used and the rest are zero.
+	[Bytes ...] char BlockFileNumber[64];
+		Similarily gives the block file number, from 0 to 42.
+	[Bytes ...] char BlockFileChar[64];
+		Similarily gives the block file character, from 0 to 143.  See
+		Appendix C for possible values.
+	[Bytes ...] char Unknowns4[32];
+		Typically zero but almost all values range from 0 to 122.
+	[Byte  ...] char Unknown5;
+		Ranges from 0 to 18, usually 0.
+	[Byte  ...] char Unknown6;
+		Ranges from 0 to 22, usually 0.
+	[Bytes ...] char NullValues1[9];
+		Always 0 (confirmed).
+	[Bytes ...] long Unknowns7[22];
+	[Bytes ...] char NullValues2[40];
+		Always 0 (confirmed).
+	[Bytes ...] long Unknown8;
+
+
+     	Dungeon Records
+	---------------
+	[Bytes ...] long Unknown6; 
+	[Bytes ...] long Unknown7; 
+	[Bytes ...] short NumDungeonPostRecords;				
+		Gives the number of dungeon post records which follow.
+	[Bytes ...] char DungeonPostRecords[4];
+		Appear to be 4 bytes in size.
+	[Bytes ...] short Unknown8;
+	[Bytes ...] short Unknown9;
+	[Bytes ...] short Unknown10;
+		Are similar from record to record.
+	[Bytes ...] char Padding[];
+		Variable size of data which appears to always be zero and may 
+		simply be padding for the dungeon post records. The padding
+		size is equal to  (127 - NumDungeonPostRecords*4).
+			
+
+
+     Location PreRecords Sub-Format
+   -------------------------------------
+     The format for the 6 byte prerecord data found in the location and
+     dungeon record data is as follows:
+         	
+	[Bytes   0-1]	short PostRecordIndex;
+		Dungeon Records:
+			0xFFFF - Always this value (confirmed)
+		Location Records:
+			Appears to give be postrecord index which the prerecord
+			may apply to. The same index may be repeated in several 
+			prerecords.
+	[Byte    2]	char  NullValue;
+		Always 0x00 in both dungeon/location records (confirmed).
+	[Byte    3]	char Unknown3;
+		Dungeon Records:
+			0x00 - Only 23 records.
+			0x10 - About half of records (10334).
+			0x40 - About half of records (10415).
+			0x80 - Only 17 records.
+		Location Records:
+			0x10 - About 20% of records (106905).
+			0x20 - Around half of records (248908).
+			0x30 - Only 100 records.
+			0x40 - About 10% of records (59384).
+			0x50 - Only 54 records.
+			0x60 - Only 53 records.
+			0x80 - Only 17 records.
+			0xA0 - About 20% of records (133138).
+			0xB0 - Only 51 records.
+			0xE0 - Only 25 records.
+	[Byte    4]	char Unknown4;
+		Dungeon Records:
+			Always non-zero and usually less than 0x0A but ranges
+			up to 0xE7 (231).
+		Location Records:
+			Takes on a wide range of values 0-0xFF, usually
+			non-zero (confirmed).
+	[Byte    5]	char Unknown5;
+		Dungeon Records:
+			0x00 - Only in 32 records
+			0x01 - Only in 8 records
+			0xFA - Occurs in most records (20749)
+		Location Records:
+			Usually always less than 0x09 but 166572 records have
+			the value 0xFA.
+
+     The arrangement of variables above is arbitrary as the actual purpose of
+     data is currently unknown.  PreRecords usually appear in location records.
+     Only 20789 (3.7%) of the 569407 total prerecords in MAPS.BSA occur in
+     dungeon records.  The number of prerecords is generally smaller in
+     dungeon records than location records as well.  Prerecord numbers range
+     from 0 to 27 in dungeon records while 0 to 555 in location records. The 
+     data has no visible effect on the location.  The data can be mangled or
+     simply removed with no apparent effect on the location.
+
+
+     Location PostRecords Sub-Format
+   -------------------------------------
+     Records which appear after the location name in the location record are
+     0x1A (26) bytes in size and have the format listed below.  Location
+     postrecords only occur in location records, not dungeon which have their
+     own post record format.  The number of prerecords in location records 
+     range from 0 to 329 with a total of 328499 in the MAPS.BSA.  There are
+     usually no postrecord information (97%).  
+
+	[Bytes 0-1] 	short HouseNameType;
+		Affect the generation of the house name.  Ranges from 0 to
+		0x81DD (33245).
+			00 00 = The Dancing Chasm (Tavern)
+			01 00 = The Knave and Scorpion (Tavern)
+			02 00 = The Dancing Chasm (Tavern)
+			00 09 = The Silver Scorpion (Tavern)
+			BA 29 = The Golden Stag (Tavern)
+			BB 29 = People of Alik'r (Temple)
+			EA 7E = The Queen's Dungeon (Tavern)
+	[Bytes  2-17] 	char NullValues[16];
+		Always 0 (confirmed).
+	[Bytes 18-19]	short Unknown1;
+		Usually zero and ranges from 0 to 852.  Appears to be generally
+		zero for residences (unconfirmed).
+	[Bytes 20-21]	short Unknown2;
+		This value seems to generally increase with each postrecord.
+		Changing this number at all crashes the game when the location
+		is loaded. Always non-zero and ranges from 4 to 2329.
+	[Bytes 22-23]	short LocationID;
+		This value is always the same as the location ID in the the 
+		location record header (confirmed).
+	[Byte 24] 	char HouseType;
+		Something to do with the house name or type, ranges from
+		0 to 0x18 (24).
+			0x0E = Temple
+			0x0F = Tavern
+			0x10 = Palace
+			0x11 = Residence
+			0x12 = Residence
+			0x13 = Residence
+	[Byte 25] 	char Unknown3;
+		Always non-zero and ranges from 1 to 0x14 (20).
+
+
+     Dungeon PostRecords Sub-Format
+   -------------------------------------
+     Dungeon post records are 4 bytes in size and have the following format:
+
+	[Byte   0]	char BlockIndex;
+		Ranges from 0 to 44, usually non-zero.  This may indicate which
+ 		block file to use (see Appendix C).
+	[Byte   1]	char Unknown1;
+		Ranges from -4 to 3 but is usually 0. 
+	[Byte   2]	char Unknown1;
+		Ranges from -5 to 4 but is usually 0.
+	[Byte   3]	unsigned char Unknown1;
+		Ranges from 0 to 231 but most values are less than 92, more
+		towards 0.
+		
+
+     Dungeon Offset Section (MapDItem)
+   -------------------------------------
+     Dungeon Offset sections appear before each section of dungeon record data
+     and follow immediately after the end of the town record data for a region.
+
+	[Bytes 0-3] long DungeonCount
+		The number of dungeon records which follow.
+	[....] Offset Section Records
+		Records are 8 bytes in length and have the following structure:
+			long Offset   = Offset to record data from end of the
+					offset section
+			short Number  = 0x0100 usually?
+			short Unknown = Another increasing number
+
+
+     Dungeon Record Data (MapDItem)
+   -------------------------------------
+     Each record is pointed to by one dungeon offset record in the preceding
+     dungeon offset section for the region.  Records are variable length. Only
+     locations that are dungeons, ie, that have new interior maps, are included
+     here.  Assumably this section defines the map 'blocks' which make up the
+     dungeon. For now this appears to be the same as the Location Record Data.
+		
+	
+     Location Table Section (MapTable)
+   -------------------------------------
+     Contains data related to to the locations in the previous sections for the
+     current region.  Starts immediately after the last dungeon record data.
+     The number of section records is the number of the towns in the current
+     region.  Each record is 17 bytes in size and appears to be a bit field
+     (bit fields are identified by the 6.# where # here would represent the
+     #th bit in the 6th byte, the 8th bit would be the 0th bit in the next
+     byte).
+   
+	[Byts 0-3]    long Unknown1; (32 bits)
+		This number is repeated in the location record.  Perhaps a 
+		unique identifier of some sort.
+	[Bytes 1-4]   char Unknown2; (8 bits)
+		Possibly always 0.
+	[Bytes 5-6.1]   unsigned int XPosition; (17 bits)
+		Gives the X-position of the location for display on the travel
+		map.  One pixel appears to equal 128 units with the origin
+		at the bottom-left of the map.  Values should range from
+		0 (far left) to 128000 (far right) (unconfirmed). Each unit
+		is equal to about 256 position units in the game.
+	[Bytes 6.2-8]   int LocationType; (15 bits)
+		Type of the location (home, dungeon, town, etc...).  This
+		determines the color of the location on the travel map.
+	[Bytes 9-10]  unsigned short YPosition; (16 bits)
+		Gives the Y-position of the location for display on the travel
+		map. Ranges from 0 (map bottom) to 64000 (map top) (unconfirmed).
+	[Bytes 11-12] short Value2; (16 bits)
+	[Bytes 13-16] long Value3; (32 bits)
+
+
+     Location Name Section (MapNames)
+   -------------------------------------
+     Repeats all the town names in the current region.  Each town name is
+     32 bytes, NULL terminated, and starts immediately following the town
+     name header section.  The town name offset section for the next region
+     starts immediately after this town name data.  This is the name used on
+     the travel map.
+
+	[Bytes 0-3]  long LocationCount;
+		Number of locations in list.  This value might be used to
+		determine the total number of locations in a region.
+	[Bytes 4...] char Names[32][...];
+		All the location names (max 32 characters including NULL
+		terminator).
+
+
+     Map Directory
+   -------------------------------------
+     The map directory is the last 4464 bytes of the Maps.BSA file and is the 
+     usual 0x0100 BSA directory type.  It contains 248 records of 18 bytes each
+     (for 62 regions, 000 to 061).  The filenames are of the form
+		MAPPITEM.0## - Place item offset data and records
+		MAPDITEM.0## - Dungeon offset data and records
+		MAPTABLE.0## - Map table
+		MAPNAMES.0## - Name table
+     where ## ranges from 00 to 61 (for each region).  Assumably the
+     DF engine requests the data by this filename. See Appendix A for
+     a list of which regions correspond to which values.
+
+
+  ARCH3D.BSA
+================================
+  The following description has been tested on all the 3D Objects contained
+  in Arch3D.BSA and appears to be sound.  There are two records which have 
+  some problems (offsets 0x008B8D58 and 0x013274C6) and don't follow the
+  known format of the other 10249 records.  They have a large section of
+  repeating bytes just after the 3D object header and their Data2 section
+  is not the standard.  These records could very well be corrupt or not 
+  used or of a special, undiscovered, format.
+  
+
+    General File Layout
+  -------------------------------------
+    The file is a typical BSA file with a 0x0200 directory at the end. Each
+    BSA record contains the information for one 3D object.
+
+	BSA Header
+        ...3D Object Records...
+	Object Directory
+
+
+    BSA Header
+  -------------------------------------
+    A typical, 4 byte, BSA header indicating 0x280B records (10251).
+
+
+    3D Object Records
+  -------------------------------------
+    Each BSA record contains the information for one 3D object. Note that each
+    record appears to be _similar_ to the .3D file format used in Battlespire. 
+    One difference is that here the .3D files are contained in one big file, 
+    while in Battlespire they are in individual files. Records range from 212
+    to 81394 bytes in size.  The basic record layout is as follows:
+
+	3D Object Header (64 Bytes)
+		Always the first 64 bytes in the record.  See the header
+		section below for detail format and information.
+	Unknown Data		
+		Two files have strange sections of repeating bytes between
+		the record header and point data. Usually, though, the point
+		data follows starting at byte 64.
+	Point Data
+		Contains the point data as given by the number of points 
+		previously read.  Each point is composed of 3 signed long
+		integers, (X, Y, Z) for 12 bytes per point. Use the PointOffset
+		variable in the header to get the start of the point data.
+	PlaneData
+		See the Plane Data Record section below.  There is one record
+		for each plane given by the PlaneCount variable.  Use the
+		PlaneOffset variable in the header to get the start of the
+		plane data.
+	Normal? Data Section
+		Appears to have XYZ 12 bytes triplets again with the number of
+		records equal to the number of planes.  This appears to be the
+		normals of the planes but not entire confirmed. The offset to
+		this data is also in the header.
+	Offset1 Data Section
+		This section is usually all 0x00's, but the size indicates it
+		should have a record size of 24 bytes with the number of
+		records equal to the number of planes. The offset to the start
+		of this data is also in the header.
+	Offset2 Data Section
+		The number of records in this section is given in the object
+		header.	The basic format of each record is as follows:
+		   [Bytes 0-15]		long Numbers[4];
+			Looks like 3 or 4 coordinates.
+		   [Bytes 16-17]	short NumSubRecords;
+			Gives the number of 6 bytes sub-records which follow.
+		   [Bytes 18...]	char SubRecords[6][]
+			The variable number of sub record data.
+		This data finishes off the object record data.  The offset
+		to the start of this data and the number of records the section
+		contains is in the object header.
+
+    Note that while most 3D objects have this format, some have the sections 
+    mixed up slightly (i.e., the data1 section comes before the points).  One
+    should use the offset information in the object header to determine where
+    each section starts.
+
+
+    3D Object Header
+  -------------------------------------
+    The header is always the first 64 bytes in a 3D object record.
+
+    	[Bytes 0-3]	char Version[4] = "v2.7"; (or "v2.6" or "v2.5")
+		Appears to be a version number or record identifier. Most of
+		the records have v2.7, though 135 have v2.6 and 9 have v2.5.
+		Note that the trailing NULL character is not included.  It is
+		currently unknown what differences the various version records
+		have, although it appears to be minor.
+	[Bytes 4-7]	long PointCount;
+		Gives the number of points contained in the 3D object.  Each
+		point consists of 3 long integers (X, Y, Z) for a total of 
+		12 bytes per point.  Point counts range from 3 to 1010.
+	[Bytes 8-11]	long PlaneCount;
+		This gives the number of planes/faces in the 3D object. Plane
+		counts range from 1 to 712.
+	[Byte  12-15]	long Unknown1;
+		Has a wide range of values, generally non-zero.
+	[Bytes 16-23]   char NullValue1[8];
+		Always 0x00 bytes (confirmed).
+	[Bytes 24-27]	long Data1Offset;
+	[Bytes 28-31]	long Data2Offset;
+		Appear to be offsets from the start of an object record
+		Offset1 is always non-zero and Offset2 is zero only 3 times
+		(confirmed).
+	[Bytes 32-35]	long NumData2Records;
+		Usually non-zero and less than 0x0010 (maximum around 212).
+		Appears to be the number of records pointed to by Offset2.
+	[Bytes 36-37]	short Unknown3;
+		A wide range of repeating values.
+	[Bytes 38-39]	short Unknown4;
+		Usually 0x0000 or less than 0x0010 (maximum of 0x0068).
+	[Bytes 40-43]	long NullValue3;
+	[Bytes 44-47]	long NullValue4;
+		Always 0x00000000 (confirmed).
+	[Bytes 48-51]	long PointOffset;
+		Almost always 0x00000040 but also takes on the values
+			0x00000000 (strange?)
+			0x00000178
+			0x00001510
+			0x000017F8
+		The offset from the start of the object record to the start of
+		the point data.
+	[Bytes 52-55]	long NormalOffset;
+		Offset from the record origin to the next byte after the end of
+		the plane data. Always non-zero (confirmed).
+	[Bytes 56-59]	long Unknown6;
+		Always 0x00000000 except for 19 records which it has a number
+		of values from 0x000000F4 to 0x000001FC. Possibly offset?
+	[Bytes 60-63]   long PlaneOffset;
+		Offset from start of object to the plane/face data.
+	
+
+    Plane Data Record Section
+  -------------------------------------
+    This is a sub-record of the 3D Object Record. Each plane record is 
+    (8 + (PlanePointCount*8)) bytes in size. Some of the variables are bit
+    fields written out as [Bytes 2-3.1] which would be a 9 bit field.
+    
+	[Byte 0]	unsigned char PlanePointCount; (8 bits)
+		The number of points which makes up the plane. This value
+		ranges from 0x00 to 0x18 (24).
+	[Byte 1]	char Unknown1;	(8 bits)
+		Usually 0x00 for most plane records (about 2% are non-zero).
+		Values range from 0x00 to 0xFF although most are repeating 
+		values in the 0x00 to 0x40 range.
+	[Bytes 2-2.6]	unsigned short SubImageIndex;	(7 bits)
+		The subimage index in the texture file (0 to 127).
+	[Bytes 2.7-3.7]	unsigned short TextureIndex;	(9 bits)
+		The texture file index (0 to 474). 
+	[Bytes 4-7] 	long Unknown4;
+		Almost always 0x00000000, 0x00010000, 0x00010001, or 0x00010002 
+		and rarely a wide range of other values.  Probably two short 
+		values.
+	[Bytes 8...]	PlanePointSubRecords
+		For each point in the PlanePointCount variable, there is 8 bytes
+		of data.
+			[Bytes 0-3] 	long PointOffset;
+			   v2.7:This gives the offset of the point used from the
+				beginning of the point data. In other words,
+				divide by 12 to get the point index. This is 
+				confirmed for all v2.7 objects except for one
+				which is strange (offset 0x013274C6).
+			   v2.6:Appears to be the same as v2.7.
+			   v2.5:The point offset is a multiple of 4 and appears
+				to be the offset to the actual XYZ coordinate
+				of the point.  To get the point index, divide
+				by 4 (unconfirmed).
+			[Bytes 4-5]	short TextureU;
+			[Bytes 6-7]	short TextureV;
+				Specifies the texture UV coordinates for the
+				point.  See Appendix E for a complete description
+				of how Daggerfall handles UV texture coordinates.
+
+
+    Object Directory
+  -------------------------------------
+    The object directory is at the end of the file and gives the record lengths
+    of all the 3D object records (the usual 0x0200 type BSA directory map).
+    There is also a long value associated with each record which, for most
+    entries, is unique (all but 25 of 10251 records have unique values in the
+    directory).
+
+
+    Special Objects
+  -------------------------------------
+    The following list of objects in the ARCH3D file have special mention.
+
+	Object 4722 (0x8B8D58)
+		This v2.6 3D object has a truncated, or different, Data2
+		section which does not conform with the known format.
+	Object 7614 (0x13274C6)
+		This v2.7 object has an invalid offset to the Data2
+		section (it points to the middle of the data1 section).
+
+
+  BLOCKS.BSA
+================================
+  A typical BSA file with a filename type directory at the end with 1295 
+  records.  There are three types of records which are contained in this
+  BSA file which can be derived from their directory filenames.
+	 FOO.	One record is not any real data but actually a DOS
+		directory listing of someones directory (with a hard drive
+		named FireBall).
+	*.RDB   Variable length record. 187 files.
+	*.RDI	Seems to be a fixed length record of 512 bytes. Appears to
+		contain only 00's and 01's. 187 files.
+	*.RMB	Most records are this type of variable length record. 
+		920 files.
+
+
+    RMB General File Layout
+  -------------------------------------
+    The RMB file is the most common type in the blocks file and is organized as
+    follows:
+
+	RMB File	
+		Fixed Length Data (FLD)		(6776 bytes total)
+			Record Counts		(3 bytes)
+			FLD Header		(640 bytes)
+			FLD Section1		(832 bytes)
+			FLD Section2		(128 bytes)
+			FLD Block Data Sizes	(128 bytes)
+			FLD Small Maps		(520 bytes)
+			FLD Automap 		(4096 bytes))
+			FLD Filenames		(429 bytes)
+		...RMB Block Data...		(Variable)
+			Outside Header		(17 bytes)		
+			  3D Object Data	(66 byte records)
+			  Flat Object Data	(17 byte records)
+			  Data Section3		(16 byte records)
+			  People Data		(17 byte records)
+			  Door Data		(19 byte records)
+			Inside Header		(17 bytes)
+			  3D Object Data	(66 byte records)
+			  Flat Object Data	(17 byte records)
+			  Data Section3		(16 byte records)
+			  People Data		(17 byte records)
+			  Door Data		(19 byte records)
+			Extra Byte		(1 byte, optional)
+		...RMB 3D Objects...		(66 byte records)
+		...RMB Flat Objects...		(17 byte records)
+
+    Note that in the RMB block data section there are two repeating sections.
+    The first section contains data for the outside, or main, object, such
+    as the exterior of a house or tavern.  This section usually just has one
+    3D Object Data section which is the main 3D object for locations.  The 
+    following section holds the data for the interior object, such as inside 
+    a house or tavern.  Typically this section holds much more information
+    than the previous one.
+
+
+    RMB Fixed Length Data (FLD)
+  -------------------------------------
+    Each block record appears to begin with 0x1A78 (6776) bytes of fixed length
+    data.  This data can be subdivided into the follow records.
+
+		FLD Record Count	(3 bytes)
+		FLD SubBlock Positions	(640 bytes)
+		FLD Section1		(832 bytes)
+		FLD Section2		(128 bytes)
+		FLD Block Data Sizes	(128 bytes)
+		FLD Small Maps		(520 bytes)
+		FLD Automap 		(4096 bytes)
+		FLD Filenames		(429 bytes)
+
+    In general, each of these subsections can be subdivided into 32 further 
+    subrecords as described in each section below.
+
+
+    RMB FLD Record Counts
+  -------------------------------------
+    The first 3 bytes in the fixed length data give the number of various
+    records which appear later on in the block record.
+
+	[Byte 0]  byte NumSubRecords1;
+		Values range from 0 to 28 with a total of 9005 subrecords1 in 
+		the blocks file.
+	[Byte 1]  byte NumSubRecords2;
+		Values range from 0 to 93 with a total of 9153 subrecords2
+		in the blocks file.
+	[Byte 2]  byte NumSubRecords3;
+		Values range from 0 to 74 with a total of 11732 subrecords3
+		in the blocks file.
+
+
+    RMB FLD Block Positions 
+  -------------------------------------
+    The fixed length data header is found at offsets 0x03 to 0x282 (642) bytes
+    in the FLD for a total of 0x280 (640 bytes). It contains 32 records of
+    0x1A (20) bytes each which contain the positions for each of the sub-blocks
+    in the file.
+		[Bytes  0 - 3]	long XPos1;
+		[Bytes  4 - 7]	long ZPos1;
+			Unknown what these coordinates are for. Possibly the 
+			subblock size?
+		[Bytes  8 -11]  long XPos2;
+		[Bytes  12-15]  long ZPos2;
+			Give the position of the subblock in map coordinates.
+		[Bytes 16-19]	long YPos2;
+			Unknown.
+   
+
+    RMB FLD Section1 
+  -------------------------------------
+    The fixed length data section1 is found at offsets 0x283 (643) to 
+    0x5C2 (1474), just after the FLD header, for a total of 0x340 (832) bytes.
+    It seems to contain 32 records of 0x1A (26) bytes each.  It seems to
+    be very similar to the location post-records found in MAPS.BSA.
+	
+
+    RMB FLD Section2
+  -------------------------------------
+    The fixed length data section2 is found at offsets 0x5C3 (1475) to 
+    0x642 (1602), just after the FLD Section1, for a total of 0x80 (128) bytes.
+    It should contain 32 records of 4 bytes each. 
+
+
+    RMB FLD Block Data Sizes
+  -------------------------------------
+    This section is found at offsets 0x5C3 (1475) to 0x6C2 (1730), just after
+    the FLD Section2, for a total of 0x80 (128) bytes. It contains 32 records
+    of 4 bytes each and represents the record sizes of the Block Data records
+    which appear later in the file.
+		
+		[Bytes 0-127]	long Sizes[32];
+
+
+    RMB FLD Small Map Data 
+  -------------------------------------
+    The fixed length data section3 is found at offsets 0x6C3 (1731) to 
+    0x8CD (2253), just after the FLD Block Data Sizes, for a total of 
+    0x208 (520) bytes. It appears to contain an 8 byte header followed by
+    two sections of 256 bytes each.  
+		
+	[Bytes   0-  7]	char Header[8];
+	[Bytes   8-263]	char TextureInfo[16][16];
+		See description which follows. Contains modified texture
+	     	image indices to use.
+	[Bytes 264-519]	char ObjectInfo[16][16];
+		Currently unknown.
+
+    The first 256 bytes after the header shows some interesting designs when 
+    viewed as a 16x16 image and probably indicates the textures to display on
+    the land under the block.  The format for the texture info bytes is a bit
+    field described as follows:
+
+	[Bits 0-5]  int	TextureIndex;	(6 bits)
+		This value, ranging from 0-63, gives the new texture index to
+		display. The texture file to use will depend on the current 
+		location (desert, temperate, etc...) and the time (raining,
+		summer, winter, etc...).  
+	[Bit    6]  int RotateTexture;	(1 bit)
+		Might be a flag indicating that the texture should be rotated
+		90 degrees so that the width becomes its height and vice-versa.
+		This allows reuse of textures rather than duplicating them in
+		the texture file.
+	[Bit    7]  int FlipTexture;	(1 bit)
+		Appears to be a flag indicating that the texture should be
+		flipped in both the X and Y directions so that its last pixel
+		becomes its first.
+
+    The last 256 bytes looks more like a starry night and could indicate how to
+    place scenery around the block, but its purpose is unknown currently. It may
+    be a bit field like the first 256 byte section.
+    
+
+    RMB FLD Automap
+  -------------------------------------
+    The fixed length data section4 is found at offsets 0x8CB (2251) to 
+    0x18CA (6346), just after the FLD Small Map Data, for a total of 0x1000 (4096)
+    bytes. It contains a 64x64 bitmap which is seen when you look at the 
+    automap while in town.  The bitmap also contains extra information which
+    is not displayed.  The general pixel values are as follows:
+	
+		0x00 	Background, transparent
+		0x03	Store? (orange)
+		0x10	Taverns (green)
+		0x12	Residence? (gray)
+		0x13	Residence (gray)
+		0x14	Residence? (gray)
+		0xE0	Special Item? (not displayed)
+		0xFA	Object (not displayed)
+		0xFB	Object (not displayed)
+
+    It is not known what the three types of residences represent.  The bitmap
+    probably does not control where things appear but was most likely used as
+    as development tool.
+
+
+    RMB FLD Filenames
+  -------------------------------------	
+    The list of component filenames is found at offset 0x18CB (6347) to
+    0x1A77 (6775), just after the FLD Section4, for a total of 0x1AD (429)
+    bytes. Filenames are 13 bytes which includes the terminating NULL
+    character (regular 8.3 syntax). There may be NULL filenames at the end
+    of the list.  The first filename is always the block record file followed
+    by 32 other filenames.
+
+	[Bytes  0- 12]	char BlockFilename[13];
+	[Bytes 13-428]  char Filenames[13][32];
+
+
+    RMB Block Data
+  -------------------------------------	
+    Following the FLD section there are usually one or more blocks of block
+    data which can be described as follows:
+
+	Header			(17 bytes)	     }	Exterior data like that
+	  3D Object Data	(66 byte records)    }  for a house or tavern. 
+	  Flat Object Data	(17 byte records)    }  Usually contains just 
+	  Data Section3		(16 byte records)    }  one 3D object 
+	  People Data		(17 byte records)    }	
+	  Door Data		(19 byte records)    }
+	Header			(17 bytes)	   	} Interior data like 	
+	  3D Object Data	(66 byte records)	} that for the inside
+	  Flat Object Data	(17 byte records)	} of a house or tavern.
+	  Data Section3		(16 byte records)	} Contains much more 
+  	  People Data		(17 byte records)	} data than the previous
+	  Door Data		(19 byte records)	} section.
+	Extra Byte		(Optional 1 byte, 0x96)
+
+    Some RMB files do not have any subrecords, they simply end after their FLD
+    Filenames.  In some subrecords there is an extra byte, 0x96, after the end
+    of the record.  It can be identified by the length of the subrecord1 as
+    given in the fixed length data section for the RMB file.
+
+
+    RMB Block Header
+  -------------------------------------	    
+    The header is always at the start of the block subrecord and appears to be
+    always 0x11 (17) bytes in size.
+
+	[Byte      0]	unsigned char Num3DObjectRecords;
+	[Byte      1]	unsigned char NumFlatObjectRecords;
+	[Byte      2]	unsigned char NumSection3Records;
+	[Byte      3]	unsigned char NumPeopleRecords;
+	[Byte      4]	unsigned char NumDoorRecords;
+		The number of records in each of the data sections which follow.
+	[Bytes  5- 6]	short Unknown1;
+	[Bytes  7- 8]	short Unknown2; (always non-zero)
+	[Bytes  9-10]	short Unknown3;
+	[Bytes 11-12]	short Unknown4; (always non-zero)
+	[Bytes 13-14]	short Unknown5; (always non-zero)
+	[Bytes 15-16]	short Unknown6; (always non-zero)
+		The data suggests 3 pairs of shorts but it could be something
+  		entirely different.
+
+
+    RMB Block Record 3D Object Data
+  -------------------------------------	    
+    The data follows immediately after the block header and is composed of 
+    0x42 (66) byte records.  It contains the 3D object information for the
+    current block.
+
+	[Bytes  0- 1]	short ObjectID1;
+		Always non-zero in the range 1-511. 
+	[Byte      2]	char  ObjectID2;
+		Ranges from 0 to 63.
+		The required 3DObject to load from Arch3D.BSA can be calculated
+		from:
+				ObjectID1 * 100 + ObjectID2
+
+		This appears to give the directory ID for the appropiate object.
+		It may be done this way if the objects are grouped by type in
+		some fashion.
+	[Byte      3]	char  Unknown1;
+		Always non-zero, ranges from 3 to 67.
+	[Bytes  4- 7]	long Unknown2;
+		Non-zero only in 1297 of 236250 records. Seems to repeat within
+		the same file.  Could be two or four seperate fields.
+	[Bytes  8-13]	long Unknown3;
+	[Bytes 14-17]	long Unknown4;
+		Non-zero only in 272 of 236250 records. Seems to repeat within
+		the same file.  Could be two or four seperate fields.
+	[Bytes 16-19]	long NullValue1;
+	[Bytes 20-23]	long NullValue2;
+		Always 0 (confirmed).
+	[Bytes 24-27]	long XPos1;	( -896256 to 761856 )
+	[Bytes 28-31]	long YPos1;	(  -59136 to 273152 )
+	[Bytes 32-35]	long ZPos1;	( -815360 to 705536 )
+		Usually 0s, but some (370) records have what look like
+		coordinates here with the given ranges.
+	[Bytes 36-39]	long XPos2;	( -1088 to 1096 )
+	[Bytes 40-43]	long YPos2;	(  -579 to  518 )
+	[Bytes 44-47]	long ZPos2;	(  -512 to 1536 )
+		Looks to be a coordinate of some form.  Values range as
+		indicated above and is usually non-zero.
+	[Bytes 48-51]	long NullValue3;
+		Always 0 (confirmed).
+	[Bytes 52-53]	short Angle;
+		Almost always non-zero.  A value of 0x200 specifies that the
+		object should be rotated 90 degrees about the Y-Axis (vertical).
+	[Bytes 54-55]	short Unknown5;
+		Always zero.
+	[Bytes 56-59]	long NullValue6;
+		Always 0 (confirmed).
+	[Bytes 60-63]	long Unknown8;
+		Only non-zero 16 times in one file (CUSTAA45.RMB) where it is
+		0x200 (512).
+	[Bytes 64-65]	short NullValue5;
+		Always 0 (confirmed).
+
+
+    RMB Block Flat Objects
+  -------------------------------------	    
+    This data follows immediately after the 3D Object Data in a Block Record 
+    and is composed of 0x11 (17) byte records.  It contains information about
+    flat objects in the block.  Flat objects are just that, merely textures 
+    painted on planes which always face the viewer (called decals in Direct3D).
+
+	[Bytes 0- 3]		long XPos;
+	[Bytes 4- 7]		long YPos;
+	[Bytes 8-11]		long ZPos;
+		Looks like coordinate of some form.
+	[Bytes 12-12.6]		int SubImageIndex;	(7 bits)
+		The subimage in the texture file to use for the flat.
+	[Bytes 12.7-13.7]	int TextureIndex;	(9 bits)
+		The texture file index to use.
+	[Bytes 14-15]		short Unknown1;
+		Usually non-zero (50%) and ranges from 0 to 65535. Might 
+		indicate whether or not to display the flat.  The 'debuging'
+		icons usually have a value of 0x0000 or 0xFFFF here.
+	[Byte     16]		char  Unknown2;
+		Usually non-zero (90%) and ranges from 0 to 105.
+
+
+    RMB Block Data Section3
+  -------------------------------------	    
+    This data follows immediately after the Flat Objects Data and is
+    composed of 0x10 (16) byte records. It has an unknown purpose.
+
+	[Bytes  0- 3]	long XPos;
+	[Bytes  4- 7]	long YPos;
+	[Bytes  8-11]	long ZPos;
+		Looks like coordinate of some form.
+	[Byte     12]	char  Unknown1;
+		Usually zero (99%) and ranges from 0 to 15.  Repeats mostly
+ 		in each file where it is present.
+	[Byte     13]	char  Unknown2;
+		Almost always non-zero and ranges from 0 to 45.
+	[Bytes 14-15]	short Unknown3;
+		Usually zero and ranges from 0 to 1292.  Lower 8 bits are
+		always zero and upper 8 bits range from 0 to 7.
+
+
+    RMB Block People Data
+  -------------------------------------	    
+    This data follows immediately after the Section3 Data in a Block record and
+    is composed of 0x11 (17) byte records.  Appears to be the same format as
+    the Flat Object data.  It contains information about the people in a block.
+
+	[Bytes 0- 3]		long XPos;
+	[Bytes 4- 7]		long YPos;
+	[Bytes 8-11]		long ZPos;
+		Looks like coordinate of some form.
+	[Bytes 12-12.6]		int SubImageIndex;	(7 bits)
+		The subimage in the texture file to use for the person.
+	[Bytes 12.7-13.7]	int TextureIndex;	(9 bits)
+		The texturefile to use for the person.
+	[Bytes 14-15]		short NPCType;
+		Seems to indicate the type of PC such as weaponsmith, barkeep.
+		etc...
+			0x0000 - Common person
+			0x01FE - Barkeep
+	[Byte     16]		char  Unknown3;
+		Always non-zero and ranges from 1 to 45.
+
+
+    RMB Block Door Data
+  -------------------------------------	    
+    This data follows immediately after the People Data in a Block and is
+    composed of 0x13 (19) byte records.  It seems to give information about
+    the movable doors in a block.
+	
+	[Bytes 0- 3]	long XPos;
+	[Bytes 4- 7]	long YPos;
+	[Bytes 8-11]	long ZPos;
+		Looks like coordinate of some form.
+	[Bytes 12-13]	short Unknown1;
+		Usually non-zero in the range 0 to 1536.
+	[Bytes 14-15]	short Unknown2;
+		Always non-zero in the range 90 to 98.
+	[Bytes 16-17]	short Unknown3;
+		Almost always non-zero in the range 0 to 7173.
+	[Byte     18]	char  NullValue1;
+		Always 0 (confirmed).
+
+
+    RMB 3D Objects
+  -------------------------------------	
+    These appear to be the same format as the RMB Blocks 3D Objects which
+    are 0x42 (66) byte records.  It probably lists the 3D Objects which
+    populate the exterior of a block, such as outside a house or tavern
+    (fences, signs, etc...).
+
+
+    RMB Flat Objects
+  -------------------------------------	
+    These appear to be the same format as the RMB Block Flat Objects
+    are 0x11 (17) byte records.  It probably gives the Flat Objects which
+    appear outside the given block, such as grass, bushes, etc...
+
+
+  Appendix A - REGION NUMBERS
+================================
+  The following is a list of region numbers which is used to access the region
+  map data in the Maps.BSA file (and possibly elsewhere). Note that some of the
+  names are not used in the game (marked by an *).
+
+	00 = Alik'r Desert
+	01 = Dragontail Mountains
+	02 = Glenpoint Foothills*
+	03 = Daggerfall Bluffs*
+ 	04 = Yeorth Burrowland*
+	05 = Dwynnen
+	06 = Ravennian Forest*
+	07 = Devilrock*
+	08 = Malekna Forest*
+	09 = Isle of Balfiera
+	10 = Bantha*
+	11 = Dak'fron
+	12 = Islands in the Western Iliac Bay*
+	13 = Tamarilyn Point*
+	14 = Lainlyn Cliffs*
+	15 = Bjoulsae River*
+	16 = Wrothgarian Mountains
+	17 = Daggerfall
+	18 = Glenpoint
+	19 = Betony
+	20 = Sentinel
+	21 = Anticlere
+	22 = Lainlyn
+	23 = Wayrest
+	24 = Gen Tem High Rock village*
+	25 = Gen Rai Hammerfell village*
+	26 = Orsinium Area
+	27 = Skeffington Wood*
+	28 = Hammerfell bay coast*
+	29 = Hammerfell sea coast*
+	30 = High Rock bay coast*
+	31 = High Rock sea coast
+	32 = Northmoor
+	33 = Menevia
+	34 = Alcaire
+	35 = Koegria
+	36 = Bhoriane
+	37 = Kambria
+	38 = Phrygias
+	39 = Urvaius
+	40 = Ykalon
+	41 = Daenia
+	42 = Shalgora
+	43 = Abibon-Gora
+	44 = Kairou
+	45 = Pothago
+	46 = Myrkwasa
+	47 = Ayasofya
+	48 = Tigonus
+	49 = Kozanset
+	50 = Satakalaam
+	51 = Totambu
+	52 = Mournoth
+	53 = Ephesus
+	54 = Santaki
+	55 = Antiphyllos
+	56 = Bergama
+	57 = Gavaudon
+	58 = Tulune
+	59 = Glenumbra Moors
+	60 = Ilessan Hills
+	61 = Cybiades
+
+
+  Appendix B - LOCATION TYPES
+================================
+  The following is a list of location types used in the map tables. The list is
+  not yet exhaustive.
+
+    Dungeons
+  ---------------------
+	0x84 (132) = Orange, Major
+	0x87 (135) = Dark Orange
+	0x8A (138) = Medium Red
+	0x8C (140) = Dark Red
+	0x8D (141) = Black (Covens)
+	
+
+    Towns
+  ---------------------
+	0xA0 (160) = Light Rose, Major
+	0xA1 (161) = Medium Rose
+	0xA2 (162) = Medium Rose
+	0xA3 (163) = Medium Rose
+	0xA6 (166) = Dark Rose (Tavern?)
+
+    Temples
+  ---------------------
+	0xA5 (165) = Light Blue
+	0xA9 (169) = Dark Blue
+
+    Homes
+  ---------------------
+	0xA8 (168) = Light Pink
+	0xAB (171) = Dark Pink
+	0xAC (172) = Dark Pink?
+
+	
+
+  Appendix C - BLOCK INDICES
+================================
+  At offset 0x1BD97F in v2.13 FALL.EXE, there's a listing of 45 RMB files in
+  the format "TVRN????.RMB" to probably be used with a printf() type function
+  to generate the appropiate entry to load from BLOCKS.BSA. The filename list
+  is as follows (13 bytes per record, 8.3 filenames, terminated by a NULL):
+
+	Index     Filename	 File Chars	File Index	Description
+	-----  --------------   ------------	----------   ------------------
+	  0	TVRN????.RMB   	A/B/G, L/M/S      0-10		Taverns
+	  1	GENR????.RMB	A/B/G, L/M/S      0-3       	General Stores
+ 	  2	RESI????.RMB	A/B/G, L/M/S      0-10		Residences
+	  3	WEAP????.RMB    A/B/G, L/M/S      0-3		Weaponsmiths
+ 	  4	ARMR????.RMB	A/B/G, L/M/S      0-3		Armourers
+	  5	ALCH????.RMB    A/B/G, L/M/S      0-3		Alchemists
+	  6	BANK????.RMB    A/B/G, L/M/S      0-3		Banks		
+	  7	BOOK????.RMB	A/B/G, L/M/S      0-3		Bookstores
+	  8	CLOT????.RMB	A/B/G, L/M/S      0-3		Clothing Stores
+          9	FURN????.RMB	A/B/G, L/M/S      0-3		Furniture Stores
+	 10	GEMS????.RMB	A/B/G, L/M/S      0-3		Jewelers
+	 11	LIBR????.RMB	A/B/G, L/M/S      0-3		Libraries
+	 12	PAWN????.RMB	A/B/G, L/M/S      0-3		Pawnshops
+	 13	TEMP????.RMB	   AA, GG        00-H0		Temples	
+	 14	TEMP????.RMB	   AA, GG        00-H0		Temples	
+	 15	PALA????.RMB    A/B/G, A	  0-4		Knight Guilds?
+	 16	FARM????.RMB	     AA           0-9		Farms
+	 17	DUNG????.RMB	     AA           0-18		Dungeons
+	 18	CAST????.RMB         AA           0-34		Unknown
+	 19	MANR????.RMB	A/B/G, L/M/S      0-3		Manors?
+	 20	SHRI????.RMB         AA		  0		Shrines?
+	 21	RUIN????.RMB	     AA           0-28	 	Ruins?
+	 22	SHCK????.RMB	     AA		  0		Unknown
+	 23	GRVE????.RMB	    A, L/M/S	  0-42		Unknown
+	 24	FILL????.RMB	     AA		  0-15		Unknown
+	 25	KRAV????.RMB	A/B/G, L	  0-1		Unknown
+	 26	KDRA????.RMB	A/B/G, L	  0-1		Unknown
+	 27	KOWL????.RMB	A/B/G, L	  0-1		Unknown
+	 28	KMOO????.RMB	A/B/G, L	  0-1		Unknown
+	 29	KCAN????.RMB	     -		   -		No Files	
+	 30	KFLA????.RMB	A/B/G, L	  0-1		Unknown
+	 31	KHOR????.RMB	A/B/G, L	  0-1		Unknown
+	 32	KROS????.RMB	A/B/G, L	  0-1		Unknown
+	 33	KWHE????.RMB	A/B/G, L	  0-1		Unknown
+	 34	KSCA????.RMB	A/B/G, L	  0-1		Unknown
+	 35	KHAW????.RMB	A/B/G, L	  0-1		Unknown
+	 36	MAGE????.RMB	A/B/G, A	  0-14		Mage Guilds
+	 37	THIE????.RMB	    A, L/M/S	   0		Thief Guilds
+	 38	DARK????.RMB	     AA	   	  0-2		Dark Brotherhood
+	 39	FIGH????.RMB    A/B/G, A/L/M/S	  0-2		Fighter Guilds
+ 	 40	CUST????.RMB	  A/G, A	  0-56		Custom?
+	 41	WALL????.RMB	     AA	  	  0-11		Walls?
+	 42	MARK????.RMB	A/B/G, A/L/M/S	  0-1		Unknown
+	 43	SHIP????.RMB	     AA	   	  0-1		Ship
+	 44	WITC????.RMB	     AA	  	  0-13		Witch Covens
+
+  File chars fill in the first two ?? and the file index fills in the last two
+  ??.   A value of "A/B/G, L/M/S" means the file characters could be one of
+  AL, AM, AS, BL, BM, BS, GL, GM, or GS.  The descriptions given are a rough
+  guess based on the RMB file name. The known values for the file chars as
+  given in location post records in MAPS.BSA are shown below.
+
+	Value	File Char
+	----	--------
+	0x00	  AA
+	0x01	  AA
+	0x02	  AA
+	0x07	  AA
+	0x0F	  DA
+	0x11	  DA
+	0x13      DA
+	0x15      DA
+	0x1F	  DA
+	0x2F	  AL
+	0x3F	  DL
+	0x4F	  AM
+	0x5F	  DM
+	0x6F	  AS
+	0x7F	  DS
+	0x8F	  AA
+	0x9F      DA
+
+  The 'D' values are strange in that there are no RMB files that have a D in
+  the fifth character position.
+
+
+  Appendix D - COORDINATE LIMITS
+================================
+  Coordinates are roughly in centimeters as given in the game by using the
+  ' cheat key for quest info. Coordinates are 256 times smaller than
+  the coordinates used for the 3D objects.
+
+	X = 0? (As far West as you can go)
+	X = 32,400,000 (As far East as you can go on the map)
+	Z = 2,000,000 (As far South as you can go on the map)
+	Z = 16,367,616 (As far North as you can go)
+
+
+  Appendix E - UV TEXTURE COORDINATES
+======================================
+  Note: Much of this information orginated from Craig (cpeterson@ematic.com)
+  and Gavin (interkarma@m0use.net, http://m0use.net/~interkarma).
+
+  Daggerfall handles UV coordinates a little differently than most 3D programs
+  and require some explanation.  The TextureU and TextureV in the plane sub-
+  records hold the texture coordinate data for the face point but, depending
+  on the face, the UV coordinates have different meaning:
+
+	Point 1: The actual DfUV coordinate for that point.
+	Point 2: The change in DfUV coordiantes relative to Point 0.  To get
+		 the absolute DfUV values you must add Point 1s to Point 0.
+	Point 3: The change in DfUV coordiantes relative to Point 1.  To get
+		 the absolute DfUV values you must add Point 2s to Point 1
+		 and 0.
+	Point 4: For faces with more than 3 points, this point is the absolute
+		 DF UV coordinate for that point.  Tests seem to indicate,
+		 though, that the game does not use this data.
+	Point 5+:UV coordinates should be all 0 and are not used.
+
+  Since all points on the face after the 4th have no UV values, this indicates
+  that we must find a relationship between the XYZ point and the UV coordinate,
+  which is detailed below.
+
+  The units of DfUV texture coordinates are relative to the size of the texture
+  image.  A value of 1024 represents 64 pixels of image data. The conversion
+  between DfUV and standard UV coordinates is detailed below.
+
+  
+    CONVERTING XYZ to UV Coordinates
+  -------------------------------------
+  Unfortunately, as of this point, there is no simple way to compute the UV
+  coordinate of a point from its XYZ location, but the best current method is
+  explained as follows.  We first assume that the relationship is linear and
+  of the form:
+		U = aX + bY + cZ + d
+		V = eX + fY + gZ + h
+  
+  Since all faces have at least 3 points (confirmed) and we know the UV
+  coordinates for the first 4 points, we should be able to solve for the 
+  parameters a...h. We assume d and h are both 0 for this case, though we
+  will use them later.  We could solve for the 6 unknowns explicitly but we
+  would have to take into account which points have similar XYZ coordinates 
+  which becomes messy (we can't divide by X1-X2 if they are equal).  Instead, 
+  we will take the similar route of expressing the equations in matrix form
+  and solving the matrix equation (which may turn out to be just as complex).
+  The matrix equation for U is of the form:
+
+	{ X1 Y1 Z1 }   { a }   { U1 }
+	{ X2 Y2 Z2 } * { b } = { U2 }
+	{ X3 Y3 Z3 }   { c }   { U3 }
+
+  where X1,Y1,Z1,U1 and the coordinates of the first points.  To solve for
+  the unknown matrix {a..c} we simple need the inverse of the {X1...Z3} matrix
+  which will be multiplied to left of the {U1..U3} matrix.  Using the Jacobian
+  method of matrix inversion we can find the solution to be:
+
+		/* Compute the determinant of the XYZ matrix */
+	Determinant = X1*Y2*Z3 + Y1*Z2*X3 + Z1*X2*Y3 - X3*Y2*Z1 - X2*Y1*Z3 - X1*Y3*Z2
+	
+		/* Compute the inverse of the XYZ matrix */
+	Xi1 = ( Y2*Z3 - Y3*Z2) / Determinant
+	Xi2 = (-X2*Z3 + X3*Z2) / Determinant
+	Xi3 = ( X2*Y3 - X3*Y2) / Determinant
+
+	Yi1 = (-Y1*Z3 + Y3*Z1) / Determinant
+	Yi2 = ( X1*Z3 - X3*Z1) / Determinant
+	Yi3 = (-X1*Y3 + X3*Y1) / Determinant
+
+	Zi1 = ( Y1*Z2 - Y2*Z1) / Determinant
+	Zi2 = (-X1*Z2 + X2*Z1) / Determinant
+	Zi3 = ( X1*Y2 - X2*Y1) / Determinant
+
+		/* Compute the DfUV conversion parameters */
+  	a = U1*Xi1 + U2*Yi1 + U3*Zi1
+	b = U1*Xi2 + U2*Yi2 + U3*Zi2
+	c = U1*Xi3 + U2*Yi3 + U3*Zi3
+	d = 0
+
+	e = V1*Xi1 + V2*Yi1 + V3*Zi1
+	f = V1*Xi2 + V2*Yi2 + V3*Zi2
+	g = V1*Xi3 + V2*Yi3 + V3*Zi3
+	h = 0
+
+  This works for more than 90% of the 10251 objects in the ARCH3D.BSA files,
+  but it fails when the Determinant above is 0.  This usually occurs when all
+  of the points on a face lie in the X=0, Y=0, or Z=0 plane.  In these cases
+  we must use the d and h parameters which were previously assumed to be zero.
+  For example, in the case where all Y=0, the equations turn into:
+
+	U = aX + cZ + d
+	V = eX + gZ + h
+
+  as b and f are irrelevant due to Y=0.  The matrix solution then becomes:
+
+	{ X1 1 Z1 }   { a }   { U1 }
+	{ X2 1 Z2 } * { d } = { U2 }
+	{ X3 1 Z3 }   { c }   { U3 }
+
+	Determinant = X1*Z3 + Z2*X3 + Z1*X2 - Z1*X3 - X2*Z3 - X1*Z2
+
+	Xi1 = ( Z3 - Z2) / Determinant
+	Xi2 = (-X2*Z3 + X3*Z2) / Determinant
+	Xi3 = ( X2 - X3) / Determinant
+
+	Yi1 = (-Z3 + Z1) / Determinant
+	Yi2 = ( X1*Z3 - X3*Z1) / Determinant
+	Yi3 = (-X1 + X3) / Determinant
+
+	Zi1 = ( Z2 - Z1) / Determinant
+	Zi2 = (-X1*Z2 + X2*Z1) / Determinant
+	Zi3 = ( X1 - X2) / Determinant
+	
+	a = U1*Xi1 + U2*Yi1 + U3*Zi1
+	b = 0
+	c = U1*Xi2 + U2*Yi3 + U3*Zi3
+	d = U1*Xi2 + U2*Yi2 + U3*Zi2
+
+	e = V1*Xi1 + V2*Yi1 + V3*Zi1
+	f = 0
+	g = V1*Xi3 + V2*Yi3 + V3*Zi3
+	h = V1*Xi2 + V2*Yi2 + V3*Zi2
+
+  using similar equations for the case of X=0 and Z=0, we can successfully
+  convert XYZ coordinates to DfUV texture coordinates for about 97% of the 
+  Arch3D objects.  This still leaves arounds 270 objects where the XYZ
+  determinant is zero.  This means we may have to solve for 4 points instead
+  of only the first 3, which becomes much more complicated.
+
+  To convert from DfUV coordinates (computed above) into 'normal' UV, the
+  following equations can be used:
+
+	NU = (aX + bY + cZ + d) / (16 * TextureWidth)
+	NV = (eX + fY + gZ + h) / (16 * TextureHeight)
+
+  Normal UV coordinates are based on a value of 1.0 equaling the texture
+  width or height and are usually used in 3D modelling programs.  These
+  equations appear to give the correct texture coordinates for most 3D
+  objects.
+
+
+  Appendix F - LAND CREATION NOTES
+====================================
+  Steps to create a map 'block' or pixel.  The entire DF map is composed of 
+  1000x500 land pixels, each of which is further divided into 5x5 subpixels as
+  per the WOODS.WLD data.  Each pixel can contain only one town or dungeon and
+  has a given terrain type, texture, and roughness.
+
+    == All Pixels ==
+	1. Generate land pixel from Woods.WLD
+	2. Smooth edges with adajacent pixels
+	3. Add flats to landscape (trees, bushes, rocks, etc...)
+	4. Check for a location within the pixel.  Currently, the only known
+	   way to do this is to check all the locations within the current
+	   region.  It may be indicated by the first two bytes in a pixel
+	   record in WOODS.WLD, but this is not yet confirmed
+		A. Load just the maptable for the region, if not loaded
+		B. Check all locations or a pixel-coordinate match
+		C. Stop search on first match
+    == Location Only Pixels ==
+	5. Load entire location from MAPS.BSA
+	6. Smooth appropiate land for location. How to get width/height for
+	   location or just smooth entire pixel? Smoothing should not be
+	   absolute, there should still be some random 'ripple'.  If the
+ 	   entire pixel is to be smoothed, this could be done in Step 1.
+	6. Parse through the object list in the map record (post records)
+	   	A. Load appropiate Blocks.BSA record.
+		B. Parse Blocks.BSA record, create block D3D frame
+			i.  Load Arch3D.BSA object
+			ii. Add object to frame at required position
+		C. Add block frame to land pixel frame at required position
+
+	*
+
+
+
+
+
+If you have any problems, suggestions or comments on this page or website, 
+please feel free to use the Contact Form to send a message to the WebMaster.
+This document was last modified on: Saturday, 26 January 2002, at 15:49:39 and 
+has been accessed 266 times since 18 March 1999 ( dagger/dfbsa.txt ).
+/~uesp/text.shtml 

@@ -1,0 +1,688 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (Australia) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENA)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_AUS
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\Daggerfall Explorer.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\Daggerfall Explorer.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
+IDB_ARENA_TREE_BITMAP   BITMAP                  "res\\ArenaTreeBitmaps.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_MAINFRAME TOOLBAR  16, 15
+BEGIN
+    BUTTON      ID_FILE_OPEN_ARENA2
+    SEPARATOR
+    BUTTON      ID_BITMAP_ZOOM_IN
+    BUTTON      ID_BITMAP_ZOOM_OUT
+    SEPARATOR
+    BUTTON      ID_BITMAP_TOGGLE_ANIMATION
+    SEPARATOR
+    BUTTON      ID_OBJECT_PREVIOUS
+    BUTTON      ID_OBJECT_NEXT
+    BUTTON      ID_OBJECT_GOTO
+    SEPARATOR
+    BUTTON      ID_VIEW_OBJECTMODE
+    BUTTON      ID_VIEW_CAMERAMODE
+    SEPARATOR
+    BUTTON      ID_OBJECT_PURE_FACES
+    BUTTON      ID_OBJECT_WIREFRAME
+    BUTTON      ID_OBJECT_SOLID
+    BUTTON      ID_OBJECT_TEXTURED
+    SEPARATOR
+    BUTTON      ID_VIEW_GROUNDPLANE
+    BUTTON      ID_VIEW_ALLBLOCKS
+    SEPARATOR
+    BUTTON      ID_VIEW_INTERIOR
+    BUTTON      ID_OBJECT_NEXTBLOCK
+    BUTTON      ID_OBJECT_PREVIOUSBLOCK
+    SEPARATOR
+    BUTTON      ID_APP_ABOUT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&Open Arena2...\tCtrl+O",     ID_FILE_OPEN_ARENA2
+        MENUITEM "&Close Arena2",               ID_FILE_CLOSE_ARENA2
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Toolbar",                    ID_VIEW_TOOLBAR
+        MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
+        MENUITEM SEPARATOR
+        MENUITEM "&Arena View",                 ID_VIEW_ARENA_VIEW
+        MENUITEM "&Properties View",            ID_VIEW_PROPERTIES_VIEW
+        MENUITEM "&Log View",                   ID_VIEW_LOG_VIEW
+        MENUITEM SEPARATOR
+        MENUITEM "&Object Mode",                32828
+        MENUITEM "&Camera Mode",                32831
+        MENUITEM SEPARATOR
+        MENUITEM "&Ground Plane",               ID_VIEW_GROUNDPLANE
+        MENUITEM "All &Blocks",                 ID_VIEW_ALLBLOCKS
+        MENUITEM SEPARATOR
+        MENUITEM "&Interior\t`",                ID_VIEW_INTERIOR
+        MENUITEM SEPARATOR
+        MENUITEM "&Reset",                      ID_VIEW_RESET
+    END
+    POPUP "&Bitmap"
+    BEGIN
+        MENUITEM "Zoom &In",                    ID_BITMAP_ZOOM_IN
+        MENUITEM "Zoom &Out",                   ID_BITMAP_ZOOM_OUT
+        MENUITEM SEPARATOR
+        MENUITEM "&Animation...",               ID_BITMAP_ANIMATION
+    END
+    POPUP "&Object"
+    BEGIN
+        MENUITEM "Pre&vious\tCtrl+Left",        ID_OBJECT_PREVIOUS
+        MENUITEM "&Next\tCtrl+Right",           ID_OBJECT_NEXT
+        MENUITEM "&Goto...\tCtrl+G",            ID_OBJECT_GOTO
+        MENUITEM SEPARATOR
+        MENUITEM "P&revious Block\tCtrl+Down",  ID_OBJECT_PREVIOUSBLOCK
+        MENUITEM "Ne&xt Block\tCtrl+Up",        ID_OBJECT_NEXTBLOCK
+        MENUITEM SEPARATOR
+        POPUP "T&exture Set"
+        BEGIN
+            MENUITEM "&None\tCtrl+0",               164
+            MENUITEM "&Desert\tCtrl+1",             ID_TERRAIN_DESERT
+            MENUITEM "&Mountain\tCtrl+2",           158
+            MENUITEM "&Temperate\tCtrl+3",          ID_TERRAIN_TEMPERATE
+            MENUITEM "&Swamp\tCtrl+4",              ID_TERRAIN_SWAMP
+            MENUITEM SEPARATOR
+            MENUITEM "S&unny\tCtrl+5",              ID_TERRAIN_NORMAL
+            MENUITEM "&Winter\tCtrl+6",             ID_TERRAIN_WINTER
+            MENUITEM "&Rain\tCtrl+7",               ID_TERRAIN_RAIN
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "Pure &Faces",                 ID_OBJECT_PURE_FACES
+        MENUITEM "&Wireframe",                  ID_OBJECT_WIREFRAME
+        MENUITEM "&Solid",                      ID_OBJECT_SOLID
+        MENUITEM "&Textured",                   ID_OBJECT_TEXTURED
+    END
+    POPUP "&Tools"
+    BEGIN
+        POPUP "Fa&ce"
+        BEGIN
+            MENUITEM "&Next Face\t=",               ID_OBJECT_FACE_NEXT_FACE
+            MENUITEM "&Previous Face\t-",           ID_OBJECT_FACE_PREVIOUS_FACE
+
+            MENUITEM "&Goto Face...\tCtrl+F",       ID_OBJECT_FACE_GOTO_FACE
+        END
+        MENUITEM "&UV Editor...",               ID_PLAY_UVEDITOR
+        MENUITEM SEPARATOR
+        MENUITEM "Alchemy Statistics...",       ID_TOOLS_ALCHEMY_STATISTICS
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About Daggerfall Explorer...", ID_APP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS 
+BEGIN
+    "A",            ID_BITMAP_TOGGLE_ANIMATION, VIRTKEY, CONTROL, NOINVERT
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT, NOINVERT
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT, NOINVERT
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT, NOINVERT
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
+    "O",            ID_FILE_OPEN_ARENA2,    VIRTKEY, CONTROL, NOINVERT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY, NOINVERT
+    "F",            ID_OBJECT_FACE_GOTO_FACE, VIRTKEY, CONTROL, NOINVERT
+    "=",            ID_OBJECT_FACE_NEXT_FACE, ASCII, NOINVERT
+    "-",            ID_OBJECT_FACE_PREVIOUS_FACE, ASCII, NOINVERT
+    "G",            ID_OBJECT_GOTO,         VIRTKEY, CONTROL, NOINVERT
+    VK_RIGHT,       ID_OBJECT_NEXT,         VIRTKEY, CONTROL, NOINVERT
+    VK_UP,          ID_OBJECT_NEXTBLOCK,    VIRTKEY, CONTROL, NOINVERT
+    VK_LEFT,        ID_OBJECT_PREVIOUS,     VIRTKEY, CONTROL, NOINVERT
+    VK_DOWN,        ID_OBJECT_PREVIOUSBLOCK, VIRTKEY, CONTROL, NOINVERT
+    "E",            ID_PLAY_UVEDITOR,       VIRTKEY, CONTROL, NOINVERT
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, NOINVERT
+    "1",            ID_TERRAIN_DESERT,      VIRTKEY, CONTROL, NOINVERT
+    "2",            ID_TERRAIN_MOUNTAIN,    VIRTKEY, CONTROL, NOINVERT
+    "0",            ID_TERRAIN_NONE,        VIRTKEY, CONTROL, NOINVERT
+    "5",            ID_TERRAIN_NORMAL,      VIRTKEY, CONTROL, NOINVERT
+    "7",            ID_TERRAIN_RAIN,        VIRTKEY, CONTROL, NOINVERT
+    "4",            ID_TERRAIN_SWAMP,       VIRTKEY, CONTROL, NOINVERT
+    "3",            ID_TERRAIN_TEMPERATE,   VIRTKEY, CONTROL, NOINVERT
+    "6",            ID_TERRAIN_WINTER,      VIRTKEY, CONTROL, NOINVERT
+    VK_OEM_3,       ID_VIEW_INTERIOR,       VIRTKEY, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 288, 231
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About Daggerfall Explorer"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,14,20,20
+    LTEXT           "Daggerfall Explorer. Version 0.90 (Beta 2). Build Date 30/08/2002.",
+                    IDC_STATIC,41,10,240,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 1999-2002. Gavin Clayton. All Rights Reserved.",
+                    IDC_STATIC,41,24,240,8
+    DEFPUSHBUTTON   "OK",IDOK,118,210,50,14,WS_GROUP
+    CONTROL         "",IDC_ABOUT_RICHEDIT,"RICHEDIT",TCS_HOTTRACK | 
+                    TCS_RAGGEDRIGHT | TCS_MULTISELECT | WS_BORDER | 
+                    WS_VSCROLL | WS_TABSTOP,7,67,274,134
+    EDITTEXT        IDC_WWWEDIT,64,38,159,12,ES_AUTOHSCROLL | ES_READONLY | 
+                    NOT WS_BORDER
+    EDITTEXT        IDC_EMAILEDIT,64,51,159,12,ES_AUTOHSCROLL | ES_READONLY | 
+                    NOT WS_BORDER
+    LTEXT           "Web:",IDC_STATIC,41,38,18,8
+    LTEXT           "Email:",IDC_STATIC,41,51,20,8
+END
+
+IDD_LOG_DIALOG DIALOGEX 0, 0, 85, 64
+STYLE DS_SETFONT | WS_CHILD | WS_VISIBLE
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_LOG_RICHEDIT,"RICHEDIT",TCS_HOTTRACK | 
+                    TCS_VERTICAL | TCS_RAGGEDRIGHT | TCS_FOCUSONBUTTONDOWN | 
+                    TCS_MULTISELECT | WS_BORDER | WS_VSCROLL | WS_HSCROLL | 
+                    WS_TABSTOP,0,0,85,64,WS_EX_CLIENTEDGE
+END
+
+IDD_PROGRESS_DIALOG DIALOGEX 0, 0, 187, 26
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION
+EXSTYLE WS_EX_TOOLWINDOW
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    CONTROL         "Progress1",IDC_CURRENT_PROGRESS,"msctls_progress32",
+                    WS_BORDER | 0x1,7,7,173,12
+END
+
+IDD_BITMAP_ANIMATION_DIALOG DIALOG  0, 0, 154, 73
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Configure Animation"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,7,52,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,97,52,50,14
+    CONTROL         "Enable animation",IDC_ENABLE_ANIMATION_CHECK,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,7,68,10
+    EDITTEXT        IDC_FPS_EDIT,75,24,40,14,ES_AUTOHSCROLL
+    LTEXT           "Frames per second:",IDC_STATIC,7,26,67,8
+END
+
+IDD_GOTO_DIALOG DIALOG  0, 0, 140, 52
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Goto..."
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_GOTO_EDIT,7,7,126,14,ES_AUTOHSCROLL | ES_NUMBER
+    DEFPUSHBUTTON   "OK",IDOK,7,31,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,83,31,50,14
+END
+
+IDD_UV_EDITOR_DIALOG DIALOG  0, 0, 209, 146
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "UV Editor"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "UV Pairs",IDC_STATIC,7,7,78,8
+    CONTROL         "List1",IDC_UV_LIST,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_NOSORTHEADER | 
+                    WS_BORDER | WS_TABSTOP,7,17,195,70
+    LTEXT           "U:",IDC_STATIC,7,97,8,8
+    EDITTEXT        IDC_U_EDIT,17,95,40,14,ES_AUTOHSCROLL
+    LTEXT           "V:",IDC_STATIC,68,97,8,8
+    EDITTEXT        IDC_V_EDIT,78,95,40,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Apply",IDC_APPLY_BUTTON,125,95,50,14
+    DEFPUSHBUTTON   "Save",IDOK,7,125,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,152,125,50,14
+END
+
+IDD_OPEN_ARENA2_DIALOG DIALOG  0, 0, 214, 79
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Open Arena2"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Path to Arena2 folder:",IDC_STATIC,7,7,83,8
+    EDITTEXT        IDC_ARENA2_PATH_EDIT,7,18,153,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse...",IDC_BROWSE_BUTTON,165,18,42,14
+    CONTROL         "Open as read-only",IDC_OPEN_READ_ONLY_CHECK,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,38,88,10
+    DEFPUSHBUTTON   "Open",IDOK,7,58,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,157,58,50,14
+END
+
+IDD_ACSTAT_DIALOG DIALOGEX 0, 0, 394, 230
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Alchemy Engine Statistics"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_ACSTAT_TAB,"SysTabControl32",0x0,7,7,380,193,
+                    WS_EX_ACCEPTFILES
+    CONTROL         "",IDC_ACSTAT_LIST,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | LVS_ALIGNLEFT | LVS_NOSORTHEADER | 
+                    WS_BORDER | WS_TABSTOP,10,22,374,175
+    DEFPUSHBUTTON   "Close",IDOK,337,209,50,14
+END
+
+IDD_PROPERTY_DIALOG DIALOGEX 0, 0, 186, 175
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_VISIBLE
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "0c0904b0"
+        BEGIN
+            VALUE "FileDescription", "Daggerfall Explorer MFC Application"
+            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "InternalName", "Daggerfall Explorer"
+            VALUE "LegalCopyright", "Copyright (C) 2001"
+            VALUE "OriginalFilename", "Daggerfall Explorer.EXE"
+            VALUE "ProductName", "Daggerfall Explorer Application"
+            VALUE "ProductVersion", "1, 0, 0, 1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0xc09, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 281
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 224
+    END
+
+    IDD_LOG_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 78
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 57
+    END
+
+    IDD_PROGRESS_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 19
+    END
+
+    IDD_BITMAP_ANIMATION_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 147
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 66
+    END
+
+    IDD_GOTO_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 133
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 45
+    END
+
+    IDD_UV_EDITOR_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 202
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 139
+    END
+
+    IDD_OPEN_ARENA2_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 207
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 72
+    END
+
+    IDD_ACSTAT_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 387
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 223
+    END
+
+    IDD_PROPERTY_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 168
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RTF
+//
+
+IDR_ABOUT_TEXT          RTF                     "res\\about.bin"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDR_MAINFRAME           "Daggerfall Explorer"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "Daggerfall Explorer"
+    AFX_IDS_IDLEMESSAGE     "Ready"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_INDICATOR_EXT        "EXT"
+    ID_INDICATOR_CAPS       "CAP"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "SCRL"
+    ID_INDICATOR_OVR        "OVR"
+    ID_INDICATOR_REC        "REC"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
+    ID_APP_EXIT             "Quit Daggerfall Explorer\nExit"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
+    ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_EDIT_CLEAR           "Erase the selection\nErase"
+    ID_EDIT_CLEAR_ALL       "Erase everything\nErase All"
+    ID_EDIT_COPY            "Copy the selection and put it on the Clipboard\nCopy"
+    ID_EDIT_CUT             "Cut the selection and put it on the Clipboard\nCut"
+    ID_EDIT_FIND            "Find the specified text\nFind"
+    ID_EDIT_PASTE           "Insert Clipboard contents\nPaste"
+    ID_EDIT_REPEAT          "Repeat the last action\nRepeat"
+    ID_EDIT_REPLACE         "Replace specific text with different text\nReplace"
+    ID_EDIT_SELECT_ALL      "Select the entire document\nSelect All"
+    ID_EDIT_UNDO            "Undo the last action\nUndo"
+    ID_EDIT_REDO            "Redo the previously undone action\nRedo"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_VIEW_TOOLBAR         "Show or hide the toolbar\nToggle ToolBar"
+    ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle StatusBar"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_SCSIZE          "Change the window size"
+    AFX_IDS_SCMOVE          "Change the window position"
+    AFX_IDS_SCMINIMIZE      "Reduce the window to an icon"
+    AFX_IDS_SCMAXIMIZE      "Enlarge the window to full size"
+    AFX_IDS_SCNEXTWINDOW    "Switch to the next document window"
+    AFX_IDS_SCPREVWINDOW    "Switch to the previous document window"
+    AFX_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_SCRESTORE       "Restore the window to normal size"
+    AFX_IDS_SCTASKLIST      "Activate Task List"
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_ARENA_TREE          "Daggerfall media resources"
+    IDC_PROPERTIES_LIST     "Daggerfall media properties"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_FILE_OPEN_ARENA2     "Open Arena2 folder\nOpen Arena2"
+    ID_FILE_CLOSE_ARENA2    "Close Arena2 folder\nClose Arena2"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_VIEW_ARENA_VIEW      "Show or hide the Arena view\nToggle Arena View"
+    ID_VIEW_PROPERTIES_VIEW "Show or hide properties view\nToggle Properties View"
+    ID_VIEW_LOG_VIEW        "Show or hide the log view\nToggle Log View"
+    ID_BITMAP_ZOOM_IN       "Zoom in on bitmap\nZoom In"
+    ID_BITMAP_ZOOM_OUT      "Zoom out from bitmap\nZoom Out"
+    ID_OBJECT_NEXT          "View next object\nNext Object"
+    ID_OBJECT_PREVIOUS      "View previous object\nPrevious Object"
+    ID_VIEW_COLOURS         "Change the colours used in the media view\nChange Colours"
+    ID_VIEW_FILTERING       "Enable or disable texture filtering\nToggle Texture Filtering"
+    ID_BITMAP_ANIMATION     "Configure animation for bitmaps\nConfigure Animation"
+    ID_OBJECT_GOTO          "Goto specified object\nGoto Object"
+    ID_OBJECT_ROTATE        "Enable rotate action for left-button mouse drag\nRotate Mode"
+    ID_OBJECT_PAN           "Enable pan action for left-button mouse drag\nPan Mode"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_OBJECT_ZOOM          "Enable zoom action for left-button mouse drag\nZoom Mode"
+    ID_VIEW_LIGHTING        "Configure lighting in the scene\nConfigure Lighting"
+    ID_OBJECT_PURE_FACES    "Draw object as actual Daggerfall faces\nDraw Pure Faces"
+    ID_OBJECT_WIREFRAME     "Draw object as triangle-based wireframe\nDraw Wireframe"
+    ID_DRAW_SOLID           "Draw object as solid\nDraw Solid"
+    ID_OBJECT_TEXTURED      "Draw object as solid and textured\nDraw Textured"
+    ID_OBJECT_SOLID         "Draw object as solid\nDraw Solid"
+    ID_OBJECT_FACE_NEXT_FACE "Select next face\nNext Face"
+    ID_OBJECT_FACE_PREVIOUS_FACE "Select previous face\nPrevious Face"
+    ID_BITMAP_TOGGLE_ANIMATION 
+                            "Enable or disable animation in the media view\nToggle Animation"
+    ID_PLAY_ZEROUVVALUES    "Set all UV values to Zero\nZero UV"
+    ID_OBJECT_FACE_GOTO_FACE "Goto specified space\nGoto Face"
+    ID_PLAY_UVEDITOR        "Edit the UV values for this face\nUV Editor"
+    ID_PLAY_EXPORT_SMF      "Export the current object to an SMF file\nExport SMF"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_PLAY_EXPORT_FMF      "Export the current object to an FMF file\nExport FMF"
+    ID_OBJECT_RESETOBJECT   "Reset object position and rotation\nReset Object"
+    ID_OBJECT_OUTSIDE       "View exterior of the current sub-block\nOuside"
+    ID_VIEW_INTERIOR        "View interior of the current sub-block record\nView Interior"
+    ID_OBJECT_CAMERA        "Enable free camera mode for 3D view\nCamera Mode"
+    ID_VIEW_OBJECTMODE      "Enable Object Mode for viewing 3D scenes\nObject Mode"
+    ID_VIEW_CAMERAMODE      "Enable Camera Mode for viewing 3D scenes\nCamera Mode"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_TOOLS_ALCHEMY_STATISTICS 
+                            "View state of Alchemy Engine\nAlchemy Statistics"
+    ID_TERRAIN_TEMPERATE    "Applies a ""temperate"" appearance to the ground and buildings\nTemperate"
+    ID_TERRAIN_DESERT       "Applies a ""desert"" appearance to the ground and buildings\nDesert"
+    158                     "Applies a ""mountain"" appearance to the ground and buildings\nMountain"
+    ID_TERRAIN_SWAMP        "Applies a ""swamp"" appearance to the ground and buildings\nSwamp"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_TERRAIN_WINTER       "Applies snow to the ground and buildings\nWinter"
+    ID_TERRAIN_RAIN         "Applies a ""wet"" look to the ground\nRain"
+    ID_BITMAP_SCALE         "Set custom scale\nScale"
+    ID_TERRAIN_NORMAL       "No weather effect in use\nNormal"
+    ID_TERRAIN_NONE         "Disable all terrain and weather effects\nNone"
+    ID_VIEW_RESET           "Reset view position and orientation\nReset View"
+    ID_OBJECT_PREVIOUSBLOCK "View previous sub-block record\nPrevious Block"
+    ID_OBJECT_NEXTBLOCK     "View next sub-block record\nNext Block"
+    ID_VIEW_ALLBLOCKS       "Enable to draw all block sub-records. Disable to draw current block sub-record only\nDraw All Blocks"
+    ID_VIEW_GROUNDPLANE     "Show or hide the ground plane\nToggle Ground Plane"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_OBJECT_INSIDE        "View interior of the current sub-block record\nView Interior"
+END
+
+#endif    // English (Australia) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#endif //_WIN32
+#include "res\Daggerfall Explorer.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

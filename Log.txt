@@ -1,0 +1,12 @@
+Daggerfall Explorer is starting.
+Alchemy Engine - Build Date 30/08/2002. [DirectX 8.1].
+Copyright 1999-2002. Gavin Clayton. All Rights Reserved.
+Adapter #0 (Driver: "nv4_disp.dll" Description: "NVIDIA GeForce3 Ti 200").
+Graphics subsystem started.
+Input subsystem started.
+Using software vertex processing on adapter #0.
+Alchemy engine started.
+Graphics subsystem shut down.
+Input subsystem shut down.
+Alchemy engine shut down.
+Daggerfall Explorer has shut down.

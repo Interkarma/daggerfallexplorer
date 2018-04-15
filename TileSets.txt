@@ -1,0 +1,141 @@
+Introduction
+------------
+
+This is an outline of the repeating patterns evident in the texture library, and how they
+relate to region and climate.
+
+
+Region Texture Patterns
+-----------------------
+
+The various regions in Daggerfall seem to follow a certain pattern with regards to ordering in
+the texture library. A range of 100 is allocated for each region, and standard texture sets
+with fixed offsets are found within each range. Some of these offsets are "reserved" and
+contain a variety of textures, such as doors, carpets, signs and unique locations. The entire
+block of 200-299 is reserved for non-region textures, such as monsters.
+
+
+Region Type Ranges
+------------------
+
+Following are the ranges that region textures fall into.
+
+000 - 099	Desert
+100 - 199	Mountain
+300 - 399	Temperate / Woodland
+400 - 499	Swamp
+
+
+Base Textures
+-------------
+
+Following are standard base textures. Add this number to the region type to discover the
+appropriate texture set for that region. The offsets marked as "Reserved" contain a variety
+of special textures that typically aren't related to region type. In some cases the reserved
+texture may not even be present. This could indicate free positions in the library never
+filled during development. The textures marked with a '*' support a climate offset.
+
+Reserved A		000 - 001
+
+*Terrain		002
+
+Reserved B		005 - 006
+
+*Ruins			007
+*Castle			009
+Palace Int.		011
+*City A			012
+*City B			014
+City Int.		016
+*City Walls		017
+Crypt A			019
+Crypt B			020
+
+Reserved C		021
+
+Dungeons A		022
+Dungeons B		023
+Dungeons C		024
+Dungeons NEWCs		025
+*Farm			026
+Farm Int.		028
+*Fences			029
+
+Reserved D		031 - 034
+
+*Mages Guild		035
+Mages Guild Int.	037
+*Manor			038
+Manor Int.		040
+Marble Floors		041
+*Merchant Homes		042
+Merchant Homes Int.	044
+Mines			045
+
+Reserved E		046
+
+Natural Caves		047
+Paintings		048
+
+Reserved F		049 - 057
+
+*Tavern Exteriors	058
+Tavern Int.		060
+*Temple Exteriors	061
+Temple Int.		063
+*Village		064
+Village Int.		066
+
+Reserved G		067
+
+Sewer			068
+*Roofs			069
+
+Reserved H		071 - 073
+
+Door Set		074
+
+Reserved I		075 - 099
+
+
+Climate Offsets
+---------------
+
+The Desert region never experiences snow, and instead has more base textures. These should
+be referenced explicity in the objects that use them. For regions 100 and higher, a +1 can
+be added during Winter for a snow texture. For all Terrain textures, a +2 can be added during rain.
+
++1	Winter	(objects and terrain)
++2	Rain	(terrain only)
+
+
+Formula
+-------
+
+The formula for determining a texture set is:
+
+Region + Base + Climate = TextureIndex
+
+For example, to find the texture for a Mountain Castle during winter:
+
+100 + 9 + 1 = 110 (TEXTURE.110 = Mountain Castle Snow)
+
+Another example, to find the ground texture for a swamp during rain
+
+400 + 2 + 2 = 404 (TEXTURE.404 = Swamp Terrain Rain)
+
+For most 3D objects in ARCH3D.BSA the appropriate base texture is referenced explicitly. A BLOCKS.BSA
+parser can check the region of a texture set and its base offset to see if climate offsets apply.
+It's possible the actual region number 0, 1, 3, 4 is referenced somewhere in MAPS.BSA or WOODS.WLD.
+
+
+Afterword
+---------
+
+In some cases the description for a texture set is misleading. For example:
+
+TEXTURE.129	Mountain Fences Snow
+TEXTURE.130	Mountain Fences
+
+Seem to be the wrong way around. However when you extract the textures in these archives, it is
+the description that's actually wrong. The +1 winter offset is still correct in this case.

@@ -1,0 +1,35 @@
+Resource Reference Rules
+------------------------
+
+Install Resource	+1		*
+Remove Resource		-1		*
+
+AddResRef		+1		*
+DecResRef		-1		*
+
+Install Sprite		+1		*
+Remove Sprite		-1		*
+
+Install Object		+1		*
+Copy Object		+1		*
+Remove Object		-1		*
+
+
+- Alchemy will log any objects that are not released when the engine exits.
+
+
+Dependency Paths
+----------------
+
+Sprite->Texture				*
+Mesh->Texture(s)			*
+Actor->Mesh->Texture(s)			*
+Emitter->Texture			N
+
+
+Key
+---
+
+->	= Depends on.
+*	= Implemented (and kind of tested :)
+N	= Not implemented.

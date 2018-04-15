@@ -1,0 +1,15 @@
+TODO List
+---------
+
+.: DE Top Tasks :.
+
+* Export functions for bitmaps as BMP and PCX.
+* Export 3D objects to .3DS
+
+.: Engine :.
+
+* A better matrix paradigm for objects
+* Fix fullscreen swap resource loss issue
+* Use state blocks engine-wide
+* A complete scene management database.
+* Scene graph.

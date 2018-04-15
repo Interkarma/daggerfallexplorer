@@ -1,0 +1,49 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: Daggerfall Explorer - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\GAVINC~1.GAV\LOCALS~1\Temp\RSP16E.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /D "OEMRESOURCE" /Fp"Debug/Daggerfall Explorer.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\Development\Projects\Current\Daggerfall Explorer\DaggerTool.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\GAVINC~1.GAV\LOCALS~1\Temp\RSP16E.tmp" 
+Creating temporary file "C:\DOCUME~1\GAVINC~1.GAV\LOCALS~1\Temp\RSP16F.tmp" with contents
+[
+tlibrarymdd.lib dxguid.lib d3d8.lib d3dx8d.lib dinput8.lib dsound.lib winmm.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/Daggerfall Explorer.pdb" /debug /machine:I386 /out:"Debug/Daggerfall Explorer.exe" /pdbtype:sept 
+".\Debug\ArenaBar.obj"
+".\Debug\ChildView.obj"
+".\Debug\Daggerfall Explorer.obj"
+".\Debug\DaggerTool.obj"
+".\Debug\LogBar.obj"
+".\Debug\LogDialog.obj"
+".\Debug\MainFrm.obj"
+".\Debug\OpenArena2Dialog.obj"
+".\Debug\PropertiesBar.obj"
+".\Debug\StdAfx.obj"
+".\Debug\scbarcf.obj"
+".\Debug\scbarg.obj"
+".\Debug\sizecbar.obj"
+".\Debug\BitmapAnimationDialog.obj"
+".\Debug\GotoDialog.obj"
+".\Debug\ProgressDialog.obj"
+".\Debug\UVEditorDialog.obj"
+".\Debug\Daggerfall Explorer.res"
+]
+Creating command line "link.exe @C:\DOCUME~1\GAVINC~1.GAV\LOCALS~1\Temp\RSP16F.tmp"
+<h3>Output Window</h3>
+Compiling...
+DaggerTool.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+Daggerfall Explorer.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
